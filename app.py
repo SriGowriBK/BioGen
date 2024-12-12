@@ -1,31 +1,21 @@
 import openai
 from flask import Flask, request, jsonify, render_template
-from dotenv import load_dotenv
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
+from dotenv import load_dotenv 
 import os
 
 # Load environment variables from a .env file
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(_name_)
 
-# OpenAI API key from the environment variable
+# Set your OpenAI API key from the environment variable
 openai.api_key = os.getenv("OPENAI_API_KEY")
-
-# Initialize Flask-Limiter with default limits
-limiter = Limiter(
-    get_remote_address,
-    app=app,
-    default_limits=["4 per day"],  # Limit each user to 3 requests per day
-)
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
 @app.route('/generate_bio', methods=['POST'])
-@limiter.limit("4 per day")  # Limit this route to 4 requests per day per user
 def generate_bio():
     data = request.json  # Receive JSON data from frontend
     name = data.get('name', 'User')
@@ -65,5 +55,5 @@ def generate_bio():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-if __name__ == '__main__':
+if _name_ == '_main_':
     app.run(debug=True)
