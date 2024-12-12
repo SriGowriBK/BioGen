@@ -1,12 +1,12 @@
 import openai
 from flask import Flask, request, jsonify, render_template
-from dotenv import load_dotenv 
+from dotenv import load_dotenv
 import os
 
 # Load environment variables from a .env file
 load_dotenv()
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 # Set your OpenAI API key from the environment variable
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -28,15 +28,12 @@ def generate_bio():
 
     # Construct a detailed prompt for OpenAI API
     prompt = (
-        f"Write a concise, creative, and engaging bio in the first person. The tone should be warm, reflective, and personal, "
-        f"similar to examples like:\n\n"
-        f"- Globe-trotting architect with a passion for spicy food and sustainable design. Seeking a fellow adventurer who can appreciate a good biryani and a thought-provoking conversation.\n"
-        f"- Introverted writer with a love for classic literature and indie coffee shops. Looking for someone who can match my wit and charm over a cup of chai and a deep discussion about our favorite novels.\n\n"
-        f"My name is {name}. I am a {career}. I would describe myself as {personality}. "
+        f"Write a concise and engaging bio in the first person, describing myself. "
+        f"My name is {name}, and I am a {career}. I would describe myself as {personality}. "
         f"My interests include {interests}. My relationship goals are {relationship}. "
         f"My beliefs and ethics are rooted in {beliefs}. "
         f"On my bucket list are things like {bucket_list}. "
-        f"Craft a bio that reflects my unique qualities while being creative and inspiring."
+        f"Make the bio personal, warm, and reflective of my unique qualities."
     )
 
     try:
@@ -44,10 +41,10 @@ def generate_bio():
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",  # Use gpt-3.5-turbo or gpt-4
             messages=[
-                {"role": "system", "content": "You are a creative bio generator."},
+                {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": prompt}
             ],
-            temperature=0.8  # Increase temperature for more creative output
+            temperature=0.7
         )
         bio = response['choices'][0]['message']['content'].strip()
         return jsonify({"bio": bio})  # Send the generated bio back to the frontend
@@ -55,5 +52,5 @@ def generate_bio():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     app.run(debug=True)
