@@ -10,14 +10,14 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# Set your OpenAI API key from the environment variable
+# OpenAI API key from the environment variable
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Initialize Flask-Limiter with default limits
 limiter = Limiter(
     get_remote_address,
     app=app,
-    default_limits=["4 per day"],  # Limit each user to 4 requests per day
+    default_limits=["4 per day"],  # Limit each user to 3 requests per day
 )
 
 @app.route('/')
