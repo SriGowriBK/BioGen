@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Bio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Generate Your Bio</h1>
+    <form id="bioForm">
+        <label for="name">Name</label>
+        <input type="text" id="name" placeholder="Enter your name" required />
+
+        <label for="career">Career</label>
+        <select id="career" required>
+            <option value="Software Engineer">Software Engineer</option>
+            <option value="Artist">Artist</option>
+            <option value="Entrepreneur">Entrepreneur</option>
+            <option value="Chef">Chef</option>
+            <option value="Teacher">Teacher</option>
+            <option value="Musician">Musician</option>
+            <option value="Designer">Designer</option>
+            <option value="Content Creator">Content Creator</option>
+            <option value="Doctor">Doctor</option>
+            <option value="Photographer">Photographer</option>
+        </select>
+
+        <label for="personality">Personality</label>
+        <select id="personality" required>
+            <option value="Adventurous">Adventurous</option>
+            <option value="Creative">Creative</option>
+            <option value="Compassionate">Compassionate</option>
+            <option value="Outgoing">Outgoing</option>
+            <option value="Introverted">Introverted</option>
+            <option value="Optimistic">Optimistic</option>
+            <option value="Practical">Practical</option>
+            <option value="Ambitious">Ambitious</option>
+            <option value="Empathetic">Empathetic</option>
+            <option value="Confident">Confident</option>
+        </select>
+
+        <label for="interests">Interests</label>
+        <select id="interests" required>
+            <option value="Cooking">Cooking</option>
+            <option value="Traveling">Traveling</option>
+            <option value="Fitness">Fitness</option>
+            <option value="Music">Music</option>
+            <option value="Literature">Literature</option>
+            <option value="Technology">Technology</option>
+            <option value="Gaming">Gaming</option>
+            <option value="Photography">Photography</option>
+            <option value="Gardening">Gardening</option>
+            <option value="Fashion">Fashion</option>
+        </select>
+
+        <label for="relationship">Relationship Goals</label>
+        <select id="relationship" required>
+            <option value="Casual">Casual</option>
+            <option value="Long-term">Long-term</option>
+            <option value="Adventurous">Adventurous</option>
+            <option value="Seeking Deep Connection">Seeking Deep Connection</option>
+            <option value="Friendship First">Friendship First</option>
+            <option value="Exploring Options">Exploring Options</option>
+            <option value="Committed Partnership">Committed Partnership</option>
+            <option value="Light-hearted">Light-hearted</option>
+            <option value="Exciting and Fun">Exciting and Fun</option>
+            <option value="Building a Family">Building a Family</option>
+        </select>
+
+        <label for="beliefs">Beliefs & Ethics</label>
+        <select id="beliefs" required>
+            <option value="Integrity Above All">Integrity Above All</option>
+            <option value="Compassion is Key">Compassion is Key</option>
+            <option value="Honesty is the Best Policy">Honesty is the Best Policy</option>
+            <option value="Respect for All">Respect for All</option>
+            <option value="Open-Mindedness">Open-Mindedness</option>
+            <option value="Family First">Family First</option>
+            <option value="Live and Let Live">Live and Let Live</option>
+            <option value="Hard Work Pays Off">Hard Work Pays Off</option>
+            <option value="Kindness Over Judgment">Kindness Over Judgment</option>
+            <option value="Gratitude is Everything">Gratitude is Everything</option>
+        </select>
+
+        <label for="bucketList">Bucket List</label>
+        <select id="bucketList" required>
+            <option value="Visit Japan During Cherry Blossom Season">Visit Japan During Cherry Blossom Season</option>
+            <option value="Learn to Speak a New Language Fluently">Learn to Speak a New Language Fluently</option>
+            <option value="Travel to All Seven Continents">Travel to All Seven Continents</option>
+            <option value="Go on a Safari in Africa">Go on a Safari in Africa</option>
+            <option value="Run a Full Marathon">Run a Full Marathon</option>
+            <option value="Experience the Northern Lights">Experience the Northern Lights</option>
+            <option value="Write and Publish a Book">Write and Publish a Book</option>
+            <option value="Take a Hot Air Balloon Ride">Take a Hot Air Balloon Ride</option>
+            <option value="Learn to Play a Musical Instrument">Learn to Play a Musical Instrument</option>
+            <option value="Build My Dream House">Build My Dream House</option>
+        </select>
+
+        <button type="submit">Generate Bio</button>
+    </form>
+    <div class="response" id="response"></div>
+
+    <script>
+        const form = document.getElementById('bioForm');
+        const responseDiv = document.getElementById('response');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const career = document.getElementById('career').value;
+            const personality = document.getElementById('personality').value;
+            const interests = document.getElementById('interests').value;
+            const relationship = document.getElementById('relationship').value;
+            const beliefs = document.getElementById('beliefs').value;
+            const bucketList = document.getElementById('bucketList').value;
+
+            try {
+                const response = await fetch('/generate_bio', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name,
+                        career,
+                        personality,
+                        interests,
+                        relationship,
+                        beliefs,
+                        bucketList
+                    })
+                });
+
+                const data = await response.json();
+                if (data.bio) {
+                    responseDiv.textContent = data.bio;
+                    responseDiv.style.border = "1px solid #ccc";
+                    responseDiv.style.padding = "10px";
+                    responseDiv.style.marginTop = "10px";
+                    responseDiv.style.borderRadius = "5px";
+                } else {
+                    responseDiv.textContent = `Error: ${data.error}`;
+                }
+            } catch (error) {
+                responseDiv.textContent = 'Something went wrong!';
+                console.error('Error:', error);
+            }
+        });
+    </script>
+</body>
+</html>
